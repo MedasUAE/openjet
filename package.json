@@ -1,0 +1,16 @@
+{
+  "name": "openjet",
+  "version": "0.0.1",
+  "description": "integration API for controlled medication",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "medas solution",
+  "license": "ISC",
+  "dependencies": {
+    "request": "^2.88.0",
+    "restify": "7.6.0",
+    "restify-cors-middleware": "1.1.1"
+  }
+}
