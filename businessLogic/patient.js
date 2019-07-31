@@ -51,7 +51,7 @@ const setIdentificationId = (patientModel) => {
  * @param {setting patient givenName and familyName} patientModel 
  */
 const setName = (patientModel) => {
-    const nameArray = patientInfo.patient_name.split(" ");
+    const nameArray = patientInfo.patient_name.trim().split(" ");
     let nameArrayWithoutBlanck = [];
     nameArray.forEach(name=>{
         if(name) nameArrayWithoutBlanck.push(name)

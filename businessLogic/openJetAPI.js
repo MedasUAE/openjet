@@ -157,7 +157,7 @@ openJetAPI.medicineListRequest = async postData => {
     const patientRequestPostData = patient(postData.patientInfo); //preparing patient postData to create
     let response = await POST(patientRequestPostData, openJetAPI.url + "Patient");// patient create api call
     //success in patient create API
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
         logger.info("Patient created, calling medicine request");
         // call medicine request
         response = await medicineRequest(postData);
@@ -178,6 +178,8 @@ openJetAPI.medicineListRequest = async postData => {
             return errorMessage; //return response
         }
     }
+
+    else return response;
 }
 
 exports.medicineAPICall = openJetAPI.medicineListRequest;
