@@ -151,7 +151,14 @@ const medicineRequest = async postData => {
     return results;
 }
 
-
+const successMessage = ()=> {
+    return {
+        message: "successfully added the medicine",
+        statusCode: 200,
+        code: "",
+        data: []
+    }
+}
 openJetAPI.medicineListRequest = async postData => {
     const patient = require('../businessLogic/patient').patient; //patient class 
     const patientRequestPostData = patient(postData.patientInfo); //preparing patient postData to create
@@ -162,7 +169,10 @@ openJetAPI.medicineListRequest = async postData => {
         // call medicine request
         response = await medicineRequest(postData);
         logger.info("Returning medicine API response, Patient created bolck");
-        return response; //ToDo work on response currently its array of response
+        if(response.statusCode == 200 || response.statusCode == 201) 
+            return successMessage(); //ToDo work on response currently its array of response
+        
+        return response; //need to check this
     }
     //error in patient create API
     else if (response.statusCode == 400) {
@@ -172,7 +182,10 @@ openJetAPI.medicineListRequest = async postData => {
             logger.info("Patient already exist, calling medicine request");
             response = await medicineRequest(postData); //calling medicine API
             logger.info("Returning medicine API response from Patient already exist block");
-            return response; //ToDo work on response currently its array of response
+            if(response.statusCode == 200 || response.statusCode == 201) 
+                return successMessage() //ToDo work on response currently its array of response
+            
+            return response; //need to check this
         } else { //patient create API unknown error
             logger.error("Patient API unknown error", JSON.stringify(errorMessage));
             return errorMessage; //return response
