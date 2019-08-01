@@ -92,6 +92,46 @@ function simplifyError(data) {
     }
 }
 
+const simplifyResponse = function (response) {
+    logger.info("AT simplifyResponse");
+    if (!response) {
+        logger.info("No response from API")
+        return {
+            message: "No response from API",
+            statusCode: 200,
+            code: "",
+            data: []
+        }
+    }
+    else if (!Array.isArray(response)) {
+        logger.info("responce is not array")
+        return {
+            message: "responce is not array",
+            statusCode: 200,
+            code: "",
+            data: []
+        }
+    }
+    else {
+        const finalResponse = {};
+        response.forEach(res => {
+            // if each response is null means success
+            if (!res) {
+                finalResponse.message = "Successfully medication submitted";
+                finalResponse.statusCode = 200;
+            }
+            else {
+                if (finalResponse.message) finalResponse.message = finalResponse.message + '\n' + res.message;
+                else finalResponse.message = res.message;
+                if (!finalResponse.statusCode || finalResponse.statusCode == 200)
+                    finalResponse.statusCode = res.statusCode;
+            }
+
+        });
+        return finalResponse;
+    }
+}
+
 // openJetAPI.medicineListRequest = async postData => {
 //     const medicine = require('./medicine').medicine;
 //     const resArray = postData.medicineList.map(async singleMedicineObj => {
@@ -151,7 +191,8 @@ const medicineRequest = async postData => {
     return results;
 }
 
-const successMessage = ()=> {
+// we can remove
+const successMessage = () => {
     return {
         message: "successfully added the medicine",
         statusCode: 200,
@@ -159,6 +200,8 @@ const successMessage = ()=> {
         data: []
     }
 }
+
+
 openJetAPI.medicineListRequest = async postData => {
     const patient = require('../businessLogic/patient').patient; //patient class 
     const patientRequestPostData = patient(postData.patientInfo); //preparing patient postData to create
@@ -168,11 +211,15 @@ openJetAPI.medicineListRequest = async postData => {
         logger.info("Patient created, calling medicine request");
         // call medicine request
         response = await medicineRequest(postData);
-        logger.info("Returning medicine API response, Patient created bolck");
-        if(response.statusCode == 200 || response.statusCode == 201) 
-            return successMessage(); //ToDo work on response currently its array of response
-        
-        return response; //need to check this
+        response = simplifyResponse(response); //Array of response to Object response
+        logger.info("Returning medicine API response, from Patient created bolck");
+        // //success in medicine submission
+        // if (response.statusCode == 200 || response.statusCode == 201){
+        //     logger.info("Returning medicine API SUCCESS response, from Patient created bolck");
+        //     return successMessage(); //ToDo work on response currently its array of response
+        // }
+
+        return response;
     }
     //error in patient create API
     else if (response.statusCode == 400) {
@@ -181,11 +228,14 @@ openJetAPI.medicineListRequest = async postData => {
         if (errorMessage.code == "BR340") {
             logger.info("Patient already exist, calling medicine request");
             response = await medicineRequest(postData); //calling medicine API
-            logger.info("Returning medicine API response from Patient already exist block");
-            if(response.statusCode == 200 || response.statusCode == 201) 
-                return successMessage() //ToDo work on response currently its array of response
-            
-            return response; //need to check this
+            response = simplifyResponse(response); //Array of response to Object response
+
+            // if (response.statusCode == 200 || response.statusCode == 201){
+            //     logger.info("Returning medicine API success response from Patient already exist block");
+            //     return successMessage() //ToDo work on response currently its array of response
+            // }
+
+            return response;
         } else { //patient create API unknown error
             logger.error("Patient API unknown error", JSON.stringify(errorMessage));
             return errorMessage; //return response
