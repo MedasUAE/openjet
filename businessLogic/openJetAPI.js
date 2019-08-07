@@ -31,7 +31,7 @@ const oauthCall = () => {
  */
 const POST = async function (postData, url) {
     logger.info("openJetAPI.POST URL:" + url);
-    // logger.debug("openJetAPI.POST \npostData: " + JSON.stringify(postData))
+    logger.debug("openJetAPI.POST \npostData: " + JSON.stringify(postData))
     if (!openJetAPI.token) openJetAPI.token = await oauthCall();
     // const options = {
     //     url,
