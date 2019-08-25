@@ -80,10 +80,10 @@ const setDosageInstruction = (medicineModel) => {
     const dosageInstruction = [{
         patientInstruction: medicine.remarks,
         route: { text: medicine.medicine_roa },
-        doseQuantity: {
-            unit: medicine.medicine_dosage_unit,
-            value: medicine.medicine_dosage_value
-        },
+        // doseQuantity: {
+        //     unit: medicine.medicine_dosage_unit,
+        //     value: medicine.medicine_dosage_value
+        // },
         timing: {
             repeat: {
                 frequency: medicine.medicine_freq,

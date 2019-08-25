@@ -53,6 +53,7 @@ const POST = async function (postData, url) {
         }, function (err, res) {
             if (err) reject(err);
             logger.info("openJetAPI.POST URL:" + url + " statusCode:" + res.statusCode)
+            logger.debug("openJetAPI.POST \nresponse: " + JSON.stringify(res))
             resolve(res);
         });
     });
